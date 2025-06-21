@@ -1,62 +1,1749 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>#Nguynlan</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+ 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* --- RESET & BASE STYLES --- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    <!-- Animate.css -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    body {
+      background: #121212;
+      color: #fff;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
 
-    <!-- Font Awesome Icons -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTq_7_1eK8e7kOjVh5uhaEZXxSNKy5F4nppLw&s') center/cover no-repeat;
+      opacity: 0.15;
+      z-index: -1;
+    }
 
-    <!-- CSS riêng -->
-    <link rel="stylesheet" href="style.css">
+    /* --- LOADING SCREEN --- */
+    #loading-screen {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .loading-logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    .loading-text {
+      font-size: 24px;
+      color: #00e5ff;
+      text-shadow: 0 0 10px #00e5ff;
+      margin-bottom: 30px;
+    }
+
+    .loading-bar-container {
+      width: 300px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .loading-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff9100, #f10057);
+      border-radius: 50px;
+      transition: width 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loading-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shine 1.5s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.7; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.7; }
+    }
+
+    /* --- LOGIN SCREEN --- */
+    #login-screen {
+      width: 100%;
+      min-height: 100vh;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background: #121212;
+      z-index: 900;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(30, 30, 30, 0.9);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transform: translateY(0);
+      transition: all 0.5s;
+    }
+
+    .login-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      height: 4px;
+      background: linear-gradient(90deg, #ff9100, #f10057);
+      z-index: 1;
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .login-logo img {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      padding: 5px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 10px;
+      transition: all 0.3s;
+    }
+
+    .login-logo img:hover {
+      transform: rotate(5deg) scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .login-logo h2 {
+      color: #fff;
+      font-size: 24px;
+      margin-bottom: 5px;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    .login-logo p {
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 15px 15px 15px 45px;
+      border: none;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+      transition: all 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .input-group input:focus {
+      background: rgba(0, 0, 0, 0.4);
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+      border-color: rgba(0, 229, 255, 0.5);
+      outline: none;
+    }
+
+    .input-group i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #00e5ff;
+      font-size: 18px;
+    }
+
+    .remember-forgot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .remember-me input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    .checkmark {
+      position: relative;
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 5px;
+      margin-right: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s;
+    }
+
+    .remember-me:hover .checkmark {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .remember-me input:checked ~ .checkmark {
+      background: #00e5ff;
+    }
+
+    .checkmark:after {
+      content: '';
+      position: absolute;
+      display: none;
+      left: 7px;
+      top: 3px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .remember-me input:checked ~ .checkmark:after {
+      display: block;
+    }
+
+    .remember-me span {
+      color: #ccc;
+      font-size: 14px;
+      user-select: none;
+    }
+
+    .forgot-password {
+      color: #00e5ff;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .forgot-password:hover {
+      color: #00fff2;
+      text-decoration: underline;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(45deg, #ff9100, #f10057);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(241, 0, 87, 0.4);
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(45deg, #ff8500, #e1004e);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(241, 0, 87, 0.5);
+    }
+
+    .login-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 10px rgba(241, 0, 87, 0.3);
+    }
+
+    .login-btn::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent 70%);
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.3s;
+    }
+
+    .login-btn:hover::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .version-info {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 12px;
+      color: #777;
+    }
+
+    /* --- MAIN MOD MENU --- */
+    #mod-menu {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+      width: 100%;
+      padding: 20px;
+      background: #121212;
+      z-index: 800;
+    }
+
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .menu-logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .menu-logo img {
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      margin-right: 15px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .menu-title h2 {
+      font-size: 22px;
+      margin-bottom: 2px;
+      background: linear-gradient(90deg, #ff9100, #f10057);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .menu-title p {
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .menu-user {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 8px 15px;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .user-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #ff9100, #f10057);
+      margin-right: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 14px;
+      color: white;
+    }
+
+    .username {
+      font-size: 14px;
+      color: #fff;
+      max-width: 100px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .menu-container {
+      background: rgba(30, 30, 30, 0.9);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s;
+    }
+
+    .menu-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    .section-title {
+      font-size: 18px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      color: #fff;
+    }
+
+    .section-title i {
+      margin-right: 10px;
+      color: #00e5ff;
+    }
+
+    /* --- SWITCH TOGGLES --- */
+    .toggle-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background: rgba(0, 0, 0, 0.3);
+      margin-bottom: 10px;
+      border-radius: 10px;
+      transition: all 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toggle-item:hover {
+      background: rgba(0, 0, 0, 0.4);
+      transform: translateX(5px);
+    }
+
+    .toggle-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .toggle-item-pro::after {
+      content: 'PRO';
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      font-size: 10px;
+      padding: 2px 5px;
+      background: linear-gradient(45deg, #ff9100, #f10057);
+      border-radius: 3px;
+      color: white;
+      font-weight: bold;
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      margin-right: 12px;
+      font-size: 18px;
+      background: linear-gradient(45deg, #ff9100, #f10057);
+      color: white;
+      box-shadow: 0 0 10px rgba(241, 0, 87, 0.3);
+    }
+
+    .toggle-text {
+      font-size: 15px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .toggle-description {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 2px;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 30px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: .4s;
+      border-radius: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 4px;
+      bottom: 3px;
+      background-color: #fff;
+      transition: .4s;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    input:checked + .toggle-slider {
+      background: linear-gradient(45deg, #00e5ff, #00a2ff);
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+    }
+
+    /* --- APP LAUNCHER SECTION --- */
+    .app-launcher {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .app-button {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 15px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-button::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      height: 3px;
+      background: linear-gradient(90deg, #ff9100, #f10057);
+      z-index: 1;
+    }
+
+    .app-button.max::before {
+      background: linear-gradient(90deg, #00e5ff, #00a2ff);
+    }
+
+    .app-button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .app-icon {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 10px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .app-name {
+      font-size: 16px;
+      color: #fff;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .app-description {
+      font-size: 12px;
+      color: #aaa;
+      text-align: center;
+    }
+
+    /* For URL Scheme section */
+    .url-schemes {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 5px;
+    }
+
+    .url-scheme-btn {
+      padding: 5px 8px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      color: #00e5ff;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .url-scheme-btn:hover {
+      background: rgba(0, 229, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* --- MENU FOOTER --- */
+    .menu-footer {
+      margin-top: auto;
+      text-align: center;
+      padding-top: 20px;
+    }
+
+    .social-links {
+      margin-bottom: 15px;
+    }
+
+    .social-links a {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.3);
+      color: #00e5ff;
+      font-size: 18px;
+      margin: 0 5px;
+      transition: all 0.3s;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .social-links a:hover {
+      background: #00e5ff;
+      color: #000;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 229, 255, 0.4);
+    }
+
+    .logout-btn {
+      padding: 12px 25px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .logout-btn i {
+      margin-right: 10px;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 65, 81, 0.2);
+      color: #ff4151;
+      border-color: rgba(255, 65, 81, 0.3);
+    }
+
+    /* --- NOTIFICATION TOAST --- */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      width: 300px;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.5s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .toast.success .toast-icon {
+      background: linear-gradient(45deg, #00cb6a, #00ad99);
+    }
+
+    .toast.error .toast-icon {
+      background: linear-gradient(45deg, #ff4151, #ff637e);
+    }
+
+    .toast.info .toast-icon {
+      background: linear-gradient(45deg, #00e5ff, #00a2ff);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      margin-right: 15px;
+      font-size: 20px;
+      color: white;
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 3px;
+    }
+
+    .toast-message {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-left: 10px;
+    }
+
+    .toast-close:hover {
+      color: white;
+    }
+
+    /* --- DEVELOPER INFO SECTION --- */
+    .developer-info {
+      background: rgba(30, 30, 30, 0.9);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s;
+    }
+
+    .developer-info h3 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      color: #fff;
+    }
+
+    .developer-info h3 i {
+      margin-right: 10px;
+      color: #00e5ff;
+    }
+
+    .developer-details {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .developer-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 15px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .developer-text h4 {
+      color: #fff;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .developer-text p {
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .developer-description {
+      color: #aaa;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .code-block {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 15px;
+      font-family: monospace;
+      color: #00e5ff;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      font-size: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .copy-code-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .copy-code-btn:hover {
+      background: rgba(0, 229, 255, 0.3);
+    }
+
+    /* --- FLOATING PARTICLES EFFECT --- */
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* --- RESPONSIVE DESIGN --- */
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 20px;
+      }
+
+      .login-logo img {
+        width: 70px;
+        height: 70px;
+      }
+
+      .menu-logo img {
+        width: 35px;
+        height: 35px;
+      }
+
+      .menu-title h2 {
+        font-size: 18px;
+      }
+
+      .menu-title p {
+        font-size: 10px;
+      }
+
+      .app-button {
+        padding: 15px 10px;
+      }
+
+      .app-icon {
+        width: 50px;
+        height: 50px;
+      }
+
+      .app-name {
+        font-size: 14px;
+      }
+
+      .toggle-item {
+        padding: 10px;
+      }
+
+      .toggle-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+      }
+
+      .toggle-text {
+        font-size: 14px;
+      }
+
+      .toggle-description {
+        font-size: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <img src="https://cdn-icons-png.flaticon.com/512/2165/2165674.png" alt="Logo" class="loading-logo">
+    <h2 class="loading-text">Đang tải...</h2>
+    <div class="loading-bar-container">
+      <div class="loading-bar" id="loading-bar"></div>
+    </div>
+  </div>
 
-    <!-- Nhạc nền -->
-    <audio autoplay loop>
-        <source src="https://files.catbox.moe/gvqgma.mp3" type="audio/mpeg">
-        Trình duyệt của bạn không hỗ trợ audio.
-    </audio>
-
-    <!-- Video nền -->
-    <video autoplay muted loop playsinline id="background-video">
-        <source src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWltdjVkbGJxMDlsdnRneDUxYm40cWk2eXN6cmdyNThuODNjM2ZiNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/FGsi1eSqeQwj9O3Z3e/giphy.gif" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-
-    <!-- Canvas hiệu ứng hạt -->
-    <canvas id="particle-canvas"></canvas>
-
-    <!-- Menu -->
-    <nav class="menu animate__animated animate__fadeInDown">
-        <a href="#contact"> </a>
-    </nav>
-
-    <!-- Nội dung chính -->
-    <div class="container">
-        <h1 class="title-3d animate__animated animate__fadeInDown">
-            <spLAN> -/ NGUYEN HOANG LAN /- </span>
-        </h1>
-
-        <div class="intro animate__animated animate__zoomIn">
-            <p>CONTACT ME : 
-            ZALO : 0971553617</p>
+  <!-- Login Screen -->
+  <div id="login-screen">
+    <div class="login-container">
+      <div class="login-logo">
+        <img src="https://cdn-icons-png.flaticon.com/512/2165/2165674.png" alt="Logo">
+        <h2>Mod Menu Pro</h2>
+        <p>Đăng nhập để truy cập mod menu</p>
+      </div>
+      <form id="login-form">
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="username" placeholder="Tên đăng nhập" autocomplete="off" autocapitalize="off">
         </div>
-
-        <a href="https://www.facebook.com/people/Ng-Lan/pfbid02A5kZaTpsF2YbuEigbL232aLz7uVMAVfHoppMKHX6VontkaxL9PpSNzSNmyzrzDvZl/" class="contact-button animate__animated animate__bounceInUp">FACEBOOK REAL</a>
-
-        <div class="social-links animate__animated animate__fadeIn" style="margin-top: 30px;">
-            <a href="#" class="fab fa-facebook"></a>
-            <a href="#" class="fab fa-twitter"></a>
-            <a href="#" class="fab fa-instagram"></a>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" placeholder="Mật khẩu">
         </div>
+        <div class="remember-forgot">
+          <label class="remember-me">
+            <input type="checkbox" id="remember-me">
+            <span class="checkmark"></span>
+            <span>Lưu đăng nhập</span>
+          </label>
+          <a href="#" class="forgot-password">Quên mật khẩu?</a>
+        </div>
+        <button type="submit" class="login-btn" id="login-btn">
+          <span>ĐĂNG NHẬP</span>
+        </button>
+      </form>
+      <div class="version-info">
+        <p>Mod Menu Pro v2.0 | Hà Văn Huấn</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Mod Menu -->
+  <div id="mod-menu">
+    <div class="menu-header">
+      <div class="menu-logo">
+        <img src="https://cdn-icons-png.flaticon.com/512/2165/2165674.png" alt="Logo">
+        <div class="menu-title">
+          <h2>Mod Menu Pro</h2>
+          <p>Created by Hà Văn Huấn</p>
+        </div>
+      </div>
+      <div class="menu-user">
+        <div class="user-avatar" id="user-avatar">H</div>
+        <div class="username" id="display-username">User</div>
+      </div>
     </div>
 
-    <!-- JavaScript riêng -->
-    <script src="script.js"></script>
+    <!-- Game Hacks Section -->
+    <div class="menu-container">
+      <h3 class="section-title"><i class="fas fa-gamepad"></i> Chức Năng Game</h3>
+      
+      <div class="toggle-item toggle-item-pro">
+        <div class="toggle-label">
+          <div class="toggle-icon">
+            <i class="fas fa-crosshairs"></i>
+          </div>
+          <div>
+            <div class="toggle-text">Aimbot</div>
+            <div class="toggle-description">Tự động ngắm vào đầu kẻ địch</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" class="feature-toggle" data-feature="aimbot">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-item">
+        <div class="toggle-label">
+          <div class="toggle-icon">
+            <i class="fas fa-eye"></i>
+          </div>
+          <div>
+            <div class="toggle-text">Aimlock</div>
+            <div class="toggle-description">Kéo Khoá Đầu (Aim)</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" class="feature-toggle" data-feature="esp">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-item">
+        <div class="toggle-label">
+          <div class="toggle-icon">
+            <i class="fas fa-running"></i>
+          </div>
+          <div>
+            <div class="toggle-text">Tốc Độ Cao</div>
+            <div class="toggle-description">Tăng tốc độ di chuyển Màn Hình</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" class="feature-toggle" data-feature="speed">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-item toggle-item-pro">
+        <div class="toggle-label">
+          <div class="toggle-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div>
+            <div class="toggle-text">Godmode</div>
+            <div class="toggle-description">Buff Fps Trong Game</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" class="feature-toggle" data-feature="godmode">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-item">
+        <div class="toggle-label">
+          <div class="toggle-icon">
+            <i class="fas fa-bullseye"></i>
+          </div>
+          <div>
+            <div class="toggle-text">No Recoil</div>
+            <div class="toggle-description">Loại bỏ giật khi bắn</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" class="feature-toggle" data-feature="recoil">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Visual & Advanced Hacks -->
+    <div class="menu-container">
+      <h3 class="section-title"><i class="fas fa-magic"></i> Nâng Cao</h3>
+
+      <div class="toggle-item">
+        <div class="toggle-label">
+          <div class="toggle-icon">
+            <i class="fas fa-hat-wizard"></i>
+          </div>
+          <div>
+            <div class="toggle-text">Mở Khóa Skin</div>
+            <div class="toggle-description">Mở tất cả skin trong game</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" class="feature-toggle" data-feature="skins">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-item toggle-item-pro">
+        <div class="toggle-label">
+          <div class="toggle-icon">
+            <i class="fas fa-gem"></i>
+          </div>
+          <div>
+            <div class="toggle-text">Kim Cương Vô Hạn</div>
+            <div class="toggle-description">Không giới hạn kim cương</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" class="feature-toggle" data-feature="diamonds">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-item">
+        <div class="toggle-label">
+          <div class="toggle-icon">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <div>
+            <div class="toggle-text">Giảm Ping</div>
+            <div class="toggle-description">Giảm độ trễ khi chơi game</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" class="feature-toggle" data-feature="ping">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-item">
+        <div class="toggle-label">
+          <div class="toggle-icon">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <div>
+            <div class="toggle-text">Đêm Sáng</div>
+            <div class="toggle-description">Nhìn rõ trong đêm tối</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" class="feature-toggle" data-feature="nightvision">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-item toggle-item-pro">
+        <div class="toggle-label">
+          <div class="toggle-icon">
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <div>
+            <div class="toggle-text">Anti-Ban</div>
+            <div class="toggle-description">Giảm nguy cơ bị khóa tài khoản</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" class="feature-toggle" data-feature="antiban">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- App Launcher Section -->
+    <div class="menu-container">
+      <h3 class="section-title"><i class="fas fa-rocket"></i> Khởi Chạy Game</h3>
+      
+      <div class="app-launcher">
+        <div class="app-button" id="launch-freefire">
+          <img src="https://play-lh.googleusercontent.com/6llpraFcTI0rEUuRpWEG9NWWblvm106y5JXcDzu60ACuaUYDD3i70a-p9_QM65NsGDE" alt="Free Fire" class="app-icon">
+          <div class="app-name">Free Fire</div>
+          <div class="app-description">Mở ứng dụng Free Fire</div>
+          <div class="url-schemes">
+            <button class="url-scheme-btn" data-url="freefire://"><i class="fas fa-mobile-alt"></i> URL Scheme</button>
+            <button class="url-scheme-btn" data-url="https://play-lh.googleusercontent.com/EFJ23Wt96gAPfM29PBArvPci-SoaI0QbB8fO5G1x63NJIcp7M5HNi21HbLQtJBxRDR4"><i class="fab fa-app-store-ios"></i> App Store</button>
+          </div>
+        </div>
+        
+        <div class="app-button max" id="launch-freefire-max">
+          <img src="https://play-lh.googleusercontent.com/EFJ23Wt96gAPfM29PBArvPci-SoaI0QbB8fO5G1x63NJIcp7M5HNi21HbLQtJBxRDR4" alt="Free Fire MAX" class="app-icon">
+          <div class="app-name">Free Fire MAX</div>
+          <div class="app-description">Mở ứng dụng Free Fire MAX</div>
+          <div class="url-schemes">
+            <button class="url-scheme-btn" data-url="freefiremax://"><i class="fas fa-mobile-alt"></i> URL Scheme</button>
+            <button class="url-scheme-btn" data-url="https://apps.apple.com/vn/app/garena-free-fire-max/id1500212004"><i class="fab fa-app-store-ios"></i> App Store</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Developer Info and URL Scheme Codes -->
+    <div class="developer-info">
+      <h3><i class="fas fa-code"></i> Coder's Corner</h3>
+      
+      <div class="developer-details">
+        <img src="https://cdn-icons-png.flaticon.com/512/2165/2165674.png" alt="Developer" class="developer-avatar">
+        <div class="developer-text">
+          <h4>Hà Văn Huấn</h4>
+          <p>Mobile Game Mod Developer</p>
+        </div>
+      </div>
+      
+      <div class="developer-description">
+        Dưới đây là các mã URL Scheme để khởi chạy các ứng dụng trực tiếp trên iPhone. Bạn có thể sử dụng các mã này trong HTML hoặc JavaScript để mở trực tiếp ứng dụng:
+      </div>
+      
+      <div class="code-block">
+        <!-- Free Fire URL Scheme -->
+<span>// Free Fire URL Scheme (iOS)
+const freeFireURL = "freefire://";
+
+// Free Fire MAX URL Scheme (iOS)
+const freeFireMaxURL = "freefiremax://";
+
+// PUBG Mobile URL Scheme (iOS)
+const pubgURL = "pubgmobile://";
+
+// Call of Duty Mobile URL Scheme (iOS)
+const codmURL = "codmobile://";
+
+// Mobile Legends URL Scheme (iOS)
+const mlbbURL = "mobilelegends://";
+
+// Genshin Impact URL Scheme (iOS)
+const genshinURL = "genshinimpact://";
+
+// Mở ứng dụng bằng JavaScript:
+function openApp(urlScheme, fallbackURL) {
+  // Thử mở app bằng URL Scheme
+  window.location.href = urlScheme;
+  
+  // Thiết lập timeout để kiểm tra nếu app không mở được
+  setTimeout(function() {
+    // Kiểm tra xem trang đã chuyển hướng chưa
+    if (document.hidden) return;
+    
+    // Nếu không thì chuyển hướng đến App Store
+    window.location.href = fallbackURL;
+  }, 500);
+}</span>
+        <button class="copy-code-btn" data-code="url-schemes">Copy</button>
+      </div>
+      
+      <div class="code-block">
+        <!-- HTML Implementation -->
+<span>&lt;!-- Sử dụng trong HTML -->
+&lt;a href="freefire://">Mở Free Fire&lt;/a>
+&lt;a href="freefiremax://">Mở Free Fire MAX&lt;/a>
+
+&lt;!-- Sử dụng với fallback -->
+&lt;a href="#" onclick="openApp('freefire://', 'https://apps.apple.com/vn/app/garena-free-fire/id1300146617'); return false;">
+  Mở Free Fire
+&lt;/a></span>
+        <button class="copy-code-btn" data-code="html-usage">Copy</button>
+      </div>
+      
+      <div class="code-block">
+        <!-- JavaScript Implementation -->
+<span>// Mở Free Fire
+document.getElementById('launch-freefire').addEventListener('click', function() {
+  openApp('freefire://', 'https://apps.apple.com/vn/app/garena-free-fire/id1300146617');
+});
+
+// Mở Free Fire MAX
+document.getElementById('launch-freefire-max').addEventListener('click', function() {
+  openApp('freefiremax://', 'https://apps.apple.com/vn/app/garena-free-fire-max/id1500212004');
+});</span>
+        <button class="copy-code-btn" data-code="js-usage">Copy</button>
+      </div>
+    </div>
+
+    <!-- Menu Footer -->
+    <div class="menu-footer">
+      <div class="social-links">
+        <a href="https://t.me/suporthuanha" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+        <a href="https://facebook.com/profile.php?id=61561543393412" target="_blank"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://zalo.me/4z4syl5ja2y2" target="_blank"><i class="fas fa-comment-dots"></i></a>
+        <a href="https://www.youtube.com/@Hu%E1%BA%A5nBot-m7g" target="_blank"><i class="fab fa-youtube"></i></a>
+      </div>
+      <button class="logout-btn" id="logout-btn">
+        <i class="fas fa-sign-out-alt"></i>
+        Đăng xuất
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <div class="toast-icon">
+      <i class="fas fa-check"></i>
+    </div>
+    <div class="toast-content">
+      <div class="toast-title">Thành công</div>
+      <div class="toast-message">Hành động đã được thực hiện</div>
+    </div>
+    <button class="toast-close">&times;</button>
+  </div>
+
+  <!-- Floating Particles Effect -->
+  <div class="particles-container" id="particles-container"></div>
+
+  <script>
+    // DOM Elements
+    const loadingScreen = document.getElementById('loading-screen');
+    const loadingBar = document.getElementById('loading-bar');
+    const loginScreen = document.getElementById('login-screen');
+    const modMenu = document.getElementById('mod-menu');
+    const loginForm = document.getElementById('login-form');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const rememberMeCheckbox = document.getElementById('remember-me');
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const displayUsername = document.getElementById('display-username');
+    const userAvatar = document.getElementById('user-avatar');
+    const toast = document.getElementById('toast');
+    const toastClose = document.querySelector('.toast-close');
+    const featureToggles = document.querySelectorAll('.feature-toggle');
+    const launchFreeFire = document.getElementById('launch-freefire');
+    const launchFreeFireMax = document.getElementById('launch-freefire-max');
+    const urlSchemeButtons = document.querySelectorAll('.url-scheme-btn');
+    const copyCodeButtons = document.querySelectorAll('.copy-code-btn');
+    const particlesContainer = document.getElementById('particles-container');
+
+    // Correct username and password for demo
+    const CORRECT_USERNAME = 'havanhuan';
+    const CORRECT_PASSWORD = 'havanhuan123';
+
+    // Initialize loading animation
+    let progress = 0;
+    const loadingInterval = setInterval(() => {
+      progress += Math.random() * 10;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(loadingInterval);
+        setTimeout(() => {
+          loadingScreen.style.opacity = '0';
+          setTimeout(() => {
+            loadingScreen.style.display = 'none';
+            checkSavedCredentials();
+          }, 500);
+        }, 500);
+      }
+      loadingBar.style.width = `${progress}%`;
+    }, 200);
+
+    // Check if credentials are saved in localStorage
+    function checkSavedCredentials() {
+      const savedUsername = localStorage.getItem('username');
+      const savedPassword = localStorage.getItem('password');
+      const savedRemember = localStorage.getItem('rememberMe');
+
+      if (savedUsername && savedPassword && savedRemember === 'true') {
+        usernameInput.value = savedUsername;
+        passwordInput.value = savedPassword;
+        rememberMeCheckbox.checked = true;
+        
+        // Auto login with animation
+        loginScreen.style.display = 'flex';
+        setTimeout(() => {
+          authenticateUser(savedUsername, savedPassword);
+        }, 1000);
+      } else {
+        // Show login screen if no saved credentials
+        loginScreen.style.display = 'flex';
+      }
+    }
+
+    // Login form submission
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value.trim();
+      
+      if (username === '' || password === '') {
+        showToast('error', 'Lỗi', 'Vui lòng nhập đầy đủ thông tin');
+        return;
+      }
+      
+      authenticateUser(username, password);
+    });
+
+    // Authenticate user
+    function authenticateUser(username, password) {
+      // Simulate loading
+      loginBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+      loginBtn.disabled = true;
+      
+      setTimeout(() => {
+        if (username === CORRECT_USERNAME && password === CORRECT_PASSWORD) {
+          // Save credentials if remember me is checked
+          if (rememberMeCheckbox.checked) {
+            localStorage.setItem('username', username);
+            localStorage.setItem('password', password);
+            localStorage.setItem('rememberMe', 'true');
+          } else {
+            localStorage.removeItem('username');
+            localStorage.removeItem('password');
+            localStorage.removeItem('rememberMe');
+          }
+          
+          // Login success
+          showToast('success', 'Thành công', 'Đăng nhập thành công');
+          
+          // Update user display
+          displayUsername.textContent = username;
+          userAvatar.textContent = username.charAt(0).toUpperCase();
+          
+          // Show mod menu
+          loginScreen.style.display = 'none';
+          modMenu.style.display = 'flex';
+          
+          // Create floating particles
+          createParticles();
+          
+          // Reset login button
+          loginBtn.innerHTML = 'ĐĂNG NHẬP';
+          loginBtn.disabled = false;
+          
+          // Get saved toggle states
+          loadToggleStates();
+        } else {
+          // Login failed
+          showToast('error', 'Lỗi', 'Tên đăng nhập hoặc mật khẩu không đúng');
+          
+          // Reset login button
+          loginBtn.innerHTML = 'ĐĂNG NHẬP';
+          loginBtn.disabled = false;
+          
+          // Shake animation for error
+          loginForm.classList.add('shake');
+          setTimeout(() => {
+            loginForm.classList.remove('shake');
+          }, 500);
+        }
+      }, 1500);
+    }
+
+    // Logout
+    logoutBtn.addEventListener('click', () => {
+      // Confirm logout
+      if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
+        // Save toggle states before logout
+        saveToggleStates();
+        
+        // Show login screen
+        modMenu.style.display = 'none';
+        loginScreen.style.display = 'flex';
+        
+        // Clear particles
+        particlesContainer.innerHTML = '';
+        
+        // Show logout notification
+        showToast('info', 'Đăng xuất', 'Bạn đã đăng xuất thành công');
+      }
+    });
+
+    // Toggle feature switches
+    featureToggles.forEach(toggle => {
+      toggle.addEventListener('change', function() {
+        const feature = this.dataset.feature;
+        const isEnabled = this.checked;
+        
+        // Animate the switch change
+        const toggleItem = this.closest('.toggle-item');
+        toggleItem.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+          toggleItem.style.transform = '';
+        }, 200);
+        
+        // Show notification based on toggle state
+        if (isEnabled) {
+          showToast('success', 'Kích hoạt', `Đã bật tính năng ${feature}`);
+        } else {
+          showToast('info', 'Tắt', `Đã tắt tính năng ${feature}`);
+        }
+        
+        // Save toggle state
+        localStorage.setItem(`feature_${feature}`, isEnabled);
+      });
+    });
+
+    // Save all toggle states
+    function saveToggleStates() {
+      featureToggles.forEach(toggle => {
+        const feature = toggle.dataset.feature;
+        localStorage.setItem(`feature_${feature}`, toggle.checked);
+      });
+    }
+
+    // Load saved toggle states
+    function loadToggleStates() {
+      featureToggles.forEach(toggle => {
+        const feature = toggle.dataset.feature;
+        const savedState = localStorage.getItem(`feature_${feature}`);
+        
+        if (savedState === 'true') {
+          toggle.checked = true;
+        }
+      });
+    }
+
+    // Function to open app with URL scheme or fallback to App Store
+    function openApp(urlScheme, fallbackURL) {
+      // Try to open app with URL scheme
+      window.location.href = urlScheme;
+      
+      // Set a timeout to check if the app was opened
+      setTimeout(function() {
+        // Check if the page is still visible (app didn't open)
+        if (document.hidden) return;
+        
+        // If not, redirect to App Store
+        window.location.href = fallbackURL;
+      }, 500);
+    }
+
+    // Launch Free Fire app
+    launchFreeFire.addEventListener('click', () => {
+      openApp('freefire://', 'https://apps.apple.com/vn/app/garena-free-fire/id1300146617');
+      showToast('info', 'Mở ứng dụng', 'Đang mở Free Fire...');
+    });
+
+    // Launch Free Fire MAX app
+    launchFreeFireMax.addEventListener('click', () => {
+      openApp('freefiremax://', 'https://apps.apple.com/vn/app/garena-free-fire-max/id1500212004');
+      showToast('info', 'Mở ứng dụng', 'Đang mở Free Fire MAX...');
+    });
+
+    // URL Scheme buttons
+    urlSchemeButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent parent click event
+        const url = button.dataset.url;
+        
+        window.location.href = url;
+        
+        if (url.includes('freefire://')) {
+          showToast('info', 'URL Scheme', 'Mở Free Fire bằng URL Scheme...');
+        } else if (url.includes('freefiremax://')) {
+          showToast('info', 'URL Scheme', 'Mở Free Fire MAX bằng URL Scheme...');
+        } else if (url.includes('apps.apple.com')) {
+          showToast('info', 'App Store', 'Chuyển hướng đến App Store...');
+        }
+      });
+    });
+
+    // Copy code buttons
+    copyCodeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const codeBlock = button.parentElement;
+        const code = codeBlock.querySelector('span').innerText;
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(code)
+          .then(() => {
+            button.textContent = 'Copied!';
+            setTimeout(() => {
+              button.textContent = 'Copy';
+            }, 2000);
+            
+            showToast('success', 'Đã sao chép', 'Đã sao chép mã vào clipboard');
+          })
+          .catch(err => {
+            console.error('Failed to copy code: ', err);
+            showToast('error', 'Lỗi', 'Không thể sao chép mã');
+          });
+      });
+    });
+
+    // Create floating particles effect
+    function createParticles() {
+      particlesContainer.innerHTML = '';
+      
+      const colors = ['#ff9100', '#f10057', '#00e5ff', '#00a2ff'];
+      const particleCount = 20;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random properties
+        const size = Math.random() * 5 + 3;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
+        // Initial position
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+        
+        // Set styles
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.backgroundColor = color;
+        particle.style.boxShadow = `0 0 ${size * 2}px ${color}`;
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+        
+        // Animate
+        const duration = Math.random() * 60 + 30;
+        const delay = Math.random() * 5;
+        
+        particle.style.animation = `float ${duration}s ${delay}s infinite linear`;
+        
+        // Random floating animation
+        const keyframes = `
+          @keyframes float {
+            0% {
+              transform: translate(0, 0);
+            }
+            25% {
+              transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px);
+            }
+            50% {
+              transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px);
+            }
+            75% {
+              transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px);
+            }
+            100% {
+              transform: translate(0, 0);
+            }
+          }
+        `;
+        
+        const style = document.createElement('style');
+        style.innerHTML = keyframes;
+        document.head.appendChild(style);
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Show toast notification
+    function showToast(type, title, message) {
+      // Set toast type and icon
+      toast.className = 'toast';
+      toast.classList.add(type);
+      
+      const iconElement = toast.querySelector('.toast-icon i');
+      
+      switch (type) {
+        case 'success':
+          iconElement.className = 'fas fa-check';
+          break;
+        case 'error':
+          iconElement.className = 'fas fa-times';
+          break;
+        case 'info':
+          iconElement.className = 'fas fa-info';
+          break;
+        default:
+          iconElement.className = 'fas fa-bell';
+      }
+      
+      // Set toast content
+      toast.querySelector('.toast-title').textContent = title;
+      toast.querySelector('.toast-message').textContent = message;
+      
+      // Show toast
+      toast.classList.add('show');
+      
+      // Auto hide after 3 seconds
+      const toastTimeout = setTimeout(() => {
+        hideToast();
+      }, 3000);
+      
+      // Clear timeout if manually closed
+      toastClose.onclick = () => {
+        clearTimeout(toastTimeout);
+        hideToast();
+      };
+    }
+
+    // Hide toast notification
+    function hideToast() {
+      toast.classList.remove('show');
+    }
+
+    // Fix input zoom on iPhone
+    document.addEventListener('touchstart', function(event) {
+      if (event.target.tagName === 'INPUT') {
+        event.target.style.fontSize = '16px';
+      }
+    }, { passive: true });
+
+    // List of all available URL schemes for popular games
+    const GAME_URL_SCHEMES = {
+      // Battle Royale Games
+      'freefire': 'freefire://',
+      'freefiremax': 'freefiremax://',
+      'pubgmobile': 'pubgmobile://',
+      'callofduty': 'codmobile://',
+      'fortnite': 'fortnite://',
+      'apexlegends': 'apex-legends://',
+
+      // MOBA Games
+      'mobilelegends': 'mobilelegends://',
+      'wildrift': 'riotgames.lol.wildrift://',
+      'arenavirus': 'aov://',
+
+      // RPG Games
+      'genshinimpact': 'genshinimpact://',
+      'ragnarokorigin': 'ragnarokorigin://',
+      'diabloimmortal': 'diabloimmortal://',
+
+      // Other Popular Games
+      'minecraft': 'minecraft://',
+      'roblox': 'roblox://',
+      'amongus': 'amongus://',
+      'clashofclans': 'clashofclans://',
+      'clashroyale': 'clashroyale://',
+      'brawlstars': 'brawlstars://'
+    };
+  </script>
 </body>
 </html>
